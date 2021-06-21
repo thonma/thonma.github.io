@@ -1,0 +1,127 @@
+[
+  {
+    "opts": [
+      "昇順ソート",
+      "降順ソート",
+      "最大値の探索",
+      "平均の算出"
+    ],
+    "code": "const nums = [4, 3, 1, 2];\nlet needContinue = true;\nwhile (needContinue) {\n  needContinue = false;\n  for (let i = 0; i < nums.length - 1; i++) {\n    if (nums[i + 1] < nums[i]) {\n      const tmp = nums[i];\n      nums[i] = nums[i + 1];\n      nums[i + 1] = tmp;\n      needContinue = true;\n    }\n  }\n}"
+  },
+  {
+    "opts": [
+      "昇順ソート",
+      "降順ソート"
+    ],
+    "code": "const nums = [4, 3, 1, 2];\nnums.sort();"
+  },
+  {
+    "opts": [
+      "降順ソート",
+      "昇順ソート"
+    ],
+    "code": "const nums = [4, 3, 1, 2];\nnums.sort(function (a, b) {\n  return b - a;\n});"
+  },
+  {
+    "opts": [
+      "最大値の探索",
+      "最小値の探索",
+      "昇順ソート",
+      "降順ソート"
+    ],
+    "code": "const nums = [4, 3, 1, 2];\nlet result = nums[0];\nfor (let i = 1; i < nums.length; i++) {\n  if (result < nums[i]) {\n    result = nums[i];\n  }\n}"
+  },
+  {
+    "opts": [
+      "平均の算出",
+      "最大値の探索",
+      "昇順ソート",
+      "降順ソート"
+    ],
+    "code": "const nums = [4, 3, 1, 2];\nlet sum = 0;\nfor (let i = 0; i < nums.length; i++) {\n  sum += nums[i];\n}\nlet result = sum / nums.length;"
+  },
+  {
+    "opts": [
+      "平均の算出",
+      "最大値の探索",
+      "昇順ソート",
+      "降順ソート"
+    ],
+    "code": "const nums = [4, 3, 1, 2];\nconst sum = nums.reduce(function (prev, curr) {\n  return prev + curr;\n});\nconst result = sum / nums.length;"
+  },
+  {
+    "opts": [
+      "出現回数の算出",
+      "平均の算出",
+      "最大値の探索",
+      "昇順ソート"
+    ],
+    "code": "const nums = [4, 3, 1, 2];\nconst result = {};\nfor (let i = 0; i < nums.length; i++) {\n  const n = nums[i];\n  if (result[n] === undefined) {\n    result[n] = 1;\n  } else {\n    result[n]++;\n  }\n}"
+  },
+  {
+    "opts": [
+      "単語数の算出",
+      "空白の数の算出",
+      "文字数の算出"
+    ],
+    "code": "const str = 'I am Peter Parker';\nlet result = 1;\nfor (let i = 1; i < str.length; i++) {\n  if (str[i] === ' ') {\n    result++;\n  }\n}"
+  },
+  {
+    "opts": [
+      "単語数の算出",
+      "空白の数の算出",
+      "文字数の算出"
+    ],
+    "code": "const str = 'I am Peter Parker';\nlet result = 0;\nif (0 < str.trim().length) {\n  result = str.trim().split(/\\s+/g).length;\n}"
+  },
+  {
+    "opts": [
+      "対象の位置を取得",
+      "対象の有無を取得",
+      "対象を昇順ソート",
+      "対象を降順ソート"
+    ],
+    "code": "const nums = [4, 3, 1, 2];\nconst target = 2;\n\nlet i = 0;\nnums[nums.length] = target;\nwhile (nums[i] !== target) {\n  i++;\n}\n\nlet result = -1;\nif (i < nums.length) {\n  result = i;\n}"
+  },
+  {
+    "opts": [
+      "対象の位置を取得",
+      "対象の有無を取得",
+      "対象を昇順ソート",
+      "対象を降順ソート"
+    ],
+    "code": "const nums = [4, 3, 1, 2];\nconst target = 5;\nlet result = -1;\nfor (let i = 0; i < nums.length; i++) {\n  if (nums[i] === target) {\n    result = i;\n    break;\n  }\n}"
+  },
+  {
+    "opts": [
+      "対象の位置を取得",
+      "対象の有無を取得",
+      "対象を昇順ソート",
+      "対象を降順ソート"
+    ],
+    "code": "const nums = [4, 3, 1, 2];\nconst result = nums.indexOf(3);"
+  },
+  {
+    "opts": [
+      "重複しない値の抽出",
+      "対象の位置を取得",
+      "対象の有無を取得"
+    ],
+    "code": "const nums = [4, 3, 1, 2, 1, 3];\nconst result = [];\nfor (let i = 0; i < nums.length; i++) {\n  const n = nums[i];\n  if (result.includes(n) === false) {\n    result.push(n);\n  }\n}"
+  },
+  {
+    "opts": [
+      "重複しない値の抽出",
+      "対象の位置を取得",
+      "対象の有無を取得"
+    ],
+    "code": "const nums = [4, 3, 1, 2, 1, 3];\nconst result = [...new Set(nums)];"
+  },
+  {
+    "opts": [
+      "配列の結合",
+      "重複しない値の抽出"
+    ],
+    "code": "const nums1 = [4, 3, 1, 2];\nconst nums2 = [5, 6, 7, 8];\nconst result = [...nums1, ...nums2];"
+  }
+]
