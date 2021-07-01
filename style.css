@@ -17,10 +17,11 @@
   box-sizing: border-box;
   font-family: inherit;
   font-size: inherit;
+  color: inherit;
 }
 
-.hljs {
-  padding: 0 !important;
+html {
+  font-size: 16px;
 }
 
 body {
@@ -29,7 +30,7 @@ body {
 }
 
 header {
-  padding: 0.5rem 4rem;
+  padding: 0.5rem 2rem;
   background-color: #184d47;
   color: #fff;
   box-shadow: 0 0.25rem 1rem rgb(48 55 66 / 15%);
@@ -38,7 +39,7 @@ header {
 }
 
 main {
-  padding: 0 4rem;
+  padding: 0 2rem;
 }
 
 label {
@@ -160,4 +161,39 @@ pre {
   50%  { transform:translate(0); }
   75%  { transform:translate(-8px); }
   100% { transform:translate(0); }
+}
+
+/***************************************************************/
+/* マルチデバイス対応 */
+/***************************************************************/
+/* デスクトップ */
+@media all and (min-width: 1024px) and (max-width: 1280px) { }
+
+/* タブレット横向き */
+@media all and (min-width: 768px) and (max-width: 1024px) {
+  html {
+    font-size: 14px;
+  }
+ }
+
+/* タブレット縦向き */
+@media all and (min-width: 480px) and (max-width: 768px) { 
+  html {
+    font-size: 12px;
+  }
+}
+
+/* スマホ */
+@media all and (max-width: 480px) {
+  html {
+    font-size: 10px;
+  }
+ }
+
+/***************************************************************/
+/* ライブラリの上書き */
+/***************************************************************/
+.hljs {
+  padding: 0 !important;
+  padding: 0.5rem 0.5rem 2rem !important;
 }
