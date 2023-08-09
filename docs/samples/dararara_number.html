@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <style>
+    .align-right {
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="Target1" class="align-right"></div>
+  <div id="Target2" class="align-right"></div>
+  <div id="Target3" class="align-right">123,456.789</div>
+  <div id="Target4" class="align-right">123456789</div>
+  <div id="Target5" class="align-right">123,456,789円</div>
+  <div id="Target6" class="align-right">1234</div>
+  <div id="Target7" class="align-right">123456</div>
+  <div id="Target8" class="align-right">123456789</div>
+  <script>
+    (function (global) {
+      'use strict';
+
+      const getRandom1DigitNum = () => Math.floor(Math.random() * 10);
+      global.dararara = (elem, val, numOfDisplayDigits) => {
+        let dararaCount = 50;
+        if (val === null || val === undefined) {
+          val = elem.textContent;
+        }
+        val = val + '';
+        const originalValLen = val.length;
+        const isPadding = numOfDisplayDigits !== null && numOfDisplayDigits !== undefined;
+        if (isPadding) {
+          val = val.padStart(numOfDisplayDigits, '0');
+        }
+        const chars = [...val];
+
+        const dararaInterval = setInterval(() => {
+          const randomNum = chars.map(c => isNaN(c) ? c : getRandom1DigitNum()).join('');
+          elem.textContent = randomNum;
+
+          dararaCount--;
+          if (dararaCount === 0) {
+            clearInterval(dararaInterval);
+
+            if (isPadding) {
+              chars.splice(0, chars.length - originalValLen);
+            }
+
+            elem.textContent = '';
+            const dararaFinInterval = setInterval(() => {
+              elem.textContent = chars.pop() + elem.textContent;
+              if (chars.length === 0) {
+                clearInterval(dararaFinInterval);
+              }
+            }, 300);
+          }
+        }, 50);
+      };
+    })(window);
+  </script>
+  <script>
+    // ======================================
+    // Usage
+    // ======================================
+    // dararara(要素, <値>, <ダラララ中の桁数>)
+    dararara(document.querySelector('#Target1'), 123456789);
+    dararara(document.querySelector('#Target2'), '123,456.789');
+    dararara(document.querySelector('#Target3'));
+    dararara(document.querySelector('#Target4'));
+    dararara(document.querySelector('#Target5'));
+    dararara(document.querySelector('#Target6'), null, 20);
+    dararara(document.querySelector('#Target7'), null, 8);
+    dararara(document.querySelector('#Target8'), null, 8);
+  </script>
+</body>
+
+</html>

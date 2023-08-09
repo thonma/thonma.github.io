@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Star Progress</title>
+  <style>
+    * {
+      font-size: 1.4rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <input type="number" value="2.5" step="0.1" min="0.0" max="5.0" id="Field"><br>
+  <span class="star_Progress" id="StarProgressSample" data-star="2.5"></span>
+
+  <hr>
+
+  <span class="star_Progress" id="StarProgress0" data-star="4.0"></span><br>
+  <span class="star_Progress" id="StarProgress1" data-star="4.1"></span><br>
+  <span class="star_Progress" id="StarProgress2" data-star="4.2"></span><br>
+  <span class="star_Progress" id="StarProgress3" data-star="4.3"></span><br>
+  <span class="star_Progress" id="StarProgress4" data-star="4.4"></span><br>
+  <span class="star_Progress" id="StarProgress5" data-star="4.5"></span><br>
+  <span class="star_Progress" id="StarProgress6" data-star="4.6"></span><br>
+  <span class="star_Progress" id="StarProgress7" data-star="4.7"></span><br>
+  <span class="star_Progress" id="StarProgress8" data-star="4.8"></span><br>
+  <span class="star_Progress" id="StarProgress9" data-star="4.9"></span><br>
+  <span class="star_Progress" id="StarProgress10" data-star="5.0"></span>
+
+  <script>
+    ((global) => {
+      'use strict';
+      global.StarProgress = {
+        init: (elem, textColor, bgColor) => {
+          // ★を5つ描画
+          const defaultStyleAttr = [
+            '-webkit-background-clip: text;',
+            '-webkit-text-fill-color: transparent;',
+            `font-family: 'Yu Gothic UI';`, // 【重要】文字の仮想ボディ(左右)が無いフォントにしないと「★」の背景が切り替わらない【重要】
+            `background-color: ${bgColor};`,
+          ].join(' ');
+          elem.innerHTML = '';
+          for (let i = 0; i < 5; i++) {
+            elem.insertAdjacentHTML('beforeend', `<span style="${defaultStyleAttr}">★</span>`);
+          }
+          elem.insertAdjacentHTML('beforeend', `&nbsp;<span style="${defaultStyleAttr} background-color: ${textColor}">${Number(elem.dataset.star).toFixed(1)}</span>`);
+
+          const star = elem.dataset.star; // 評価
+          const intPart = Math.floor(star); // 評価の整数部
+          const decimalPart = star - Math.floor(intPart); // 評価の小数部
+          // console.log(star, intPart, decimalPart);
+
+          // 整数部の色を変更
+          if (0 < intPart) {
+            for (let i = 0; i < intPart; i++) {
+              const currStyle = elem.children[i].getAttribute('style');
+              elem.children[i].setAttribute('style', `${currStyle} background-color: ${textColor};`);
+            }
+          }
+
+          // 小数部の色を変更
+          if (0 < decimalPart) {
+            const decimalPartPercent = decimalPart * 100;
+            const linearGradientValue = [
+              `to right`,
+              `${textColor} ${decimalPartPercent}%`,
+              `${bgColor} ${decimalPartPercent}% 100%`
+            ].join(', ');
+            const currStyle = elem.children[intPart].getAttribute('style');
+            elem.children[intPart].setAttribute('style', `${currStyle} background-image: linear-gradient(${linearGradientValue});`);
+          }
+        },
+      };
+    })(window);
+  </script>
+  <script>
+    for (let i = 0; i <= 10; i++) {
+      StarProgress.init(document.querySelector(`#StarProgress${i}`), '#FDD835', '#AAA');
+    }
+
+    StarProgress.init(StarProgressSample, '#FDD835', '#AAA');
+    Field.addEventListener('change', evt => {
+      StarProgressSample.dataset.star = evt.target.value;
+      StarProgress.init(StarProgressSample, '#FDD835', '#AAA');
+    });
+  </script>
+
+</body>
+
+</html>
