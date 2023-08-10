@@ -15,6 +15,10 @@
     };
   </script>
   <style type="text/tailwindcss">
+    :root {
+      --animate-duration: 1s;
+    }
+
     .input-field {
       @apply w-full border-2 p-1;
       transition: background-color 1s ease;
@@ -23,8 +27,7 @@
     .btn {
       @apply bg-white hover:bg-gray-100 text-gray-800 py-1 px-2 border border-gray-400 rounded whitespace-nowrap
     }
-  </style>
-  <style>
+
     @-webkit-keyframes shakeY {
 
       0%,
@@ -82,9 +85,10 @@
 <body class="bg-slate-200">
 
   <!-- ------------------------------------------------------------------- -->
-  <!-- Btns -->
+  <!-- よく使うやつ -->
   <!-- ------------------------------------------------------------------- -->
-  <div class="flex px-8 py-4">
+  <div class="px-8 py-4">
+    <label class="block">よく使うやつ</label>
     <button class="btn mr-1" data-prefix="'" data-suffix="'">シングルクォート (カンマなし)</button>
     <button class="btn mr-1" data-prefix="'" data-suffix="',">シングルクォート (カンマあり)</button>
     <button class="btn mr-1" data-prefix='"' data-suffix='"'>ダブルクォート (カンマなし)</button>
@@ -92,18 +96,21 @@
     <button class="btn mr-1" data-prefix="&lt;th&gt;" data-suffix="&lt;/th&gt;">&lt;th&gt;</button>
     <button class="btn mr-1" data-prefix="&lt;td&gt;" data-suffix="&lt;/td&gt;">&lt;td&gt;</button>
     <button class="btn mr-1" data-prefix='sql.append("' data-suffix='");'>sql.append("{Content}");</button>
+    <br>
+    <button class="btn mr-1" data-prefix="・" data-suffix="">・ (中黒)</button>
+    <button class="btn mr-1" data-prefix="■" data-suffix="">■ (黒四角)</button>
   </div>
 
   <!-- ------------------------------------------------------------------- -->
-  <!-- Prefix, Content, Suffix Form -->
+  <!-- 前置詞、後置詞、対象テキストの入力フォーム -->
   <!-- ------------------------------------------------------------------- -->
   <div class="flex px-8 py-4">
     <div class="w-1/4 pr-2">
-      <label for="Prefix">Prefix</label>
+      <label for="Prefix">前置詞 (すべての行頭に追記するテキスト)</label>
       <input type="text" id="Prefix" name="prefix" value='sql.append("' placeholder=" Prefix" class="input-field">
     </div>
     <div class="w-2/4 grow">
-      <label for="Content">Content</label>
+      <label for="Content">対象テキスト</label>
       <textarea id="Content" name="content" class="input-field">SELECT
   *
 FROM
@@ -115,17 +122,17 @@ ORDER BY
   foo DESC</textarea>
     </div>
     <div class="w-1/4 pl-2">
-      <label for="Suffix">Suffix</label>
+      <label for="Suffix">後置詞 (すべての行末に追記するテキスト)</label>
       <input type="text" id="Suffix" name="suffix" value='");' placeholder="Suffix" class="input-field">
     </div>
   </div>
 
   <!-- ------------------------------------------------------------------- -->
-  <!-- Output Area -->
+  <!-- 結果エリア -->
   <!-- ------------------------------------------------------------------- -->
   <div class="flex px-8 py-4">
     <div class="w-full grow">
-      <label for="Output">Output</label>
+      <label for="Output">結果</label>
       <textarea id="Output" name="output" class="input-field" readonly></textarea>
     </div>
   </div>
