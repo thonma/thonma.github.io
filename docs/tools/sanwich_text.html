@@ -102,11 +102,11 @@
   </div>
 
   <!-- ------------------------------------------------------------------- -->
-  <!-- 前置詞、後置詞、対象テキストの入力フォーム -->
+  <!-- 行頭テキスト、行末テキスト、対象テキストの入力フォーム -->
   <!-- ------------------------------------------------------------------- -->
   <div class="flex px-8 py-4">
     <div class="w-1/4 pr-2">
-      <label for="Prefix">前置詞 (すべての行頭に追記するテキスト)</label>
+      <label for="Prefix">行頭テキスト</label>
       <input type="text" id="Prefix" name="prefix" value='sql.append("' placeholder=" Prefix" class="input-field">
     </div>
     <div class="w-2/4 grow">
@@ -122,7 +122,7 @@ ORDER BY
   foo DESC</textarea>
     </div>
     <div class="w-1/4 pl-2">
-      <label for="Suffix">後置詞 (すべての行末に追記するテキスト)</label>
+      <label for="Suffix">行末テキスト</label>
       <input type="text" id="Suffix" name="suffix" value='");' placeholder="Suffix" class="input-field">
     </div>
   </div>
