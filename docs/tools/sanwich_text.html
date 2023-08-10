@@ -5,9 +5,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>サンドイッチテキスト</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/6.0.1/autosize.min.js" integrity="sha512-OjjaC+tijryqhyPqy7jWSPCRj7fcosu1zreTX1k+OWSwu6uSqLLQ2kxaqL9UpR7xFaPsCwhMf1bQABw2rCxMbg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <script>
     tailwind.config = {
       // デフォルトのまま使うので何も書かない
@@ -15,12 +16,83 @@
   </script>
   <style type="text/tailwindcss">
     .input-field {
-      @apply w-full border-2 p-1
+      @apply w-full border-2 p-1;
+      transition: background-color 1s ease;
+    }
+
+    .btn {
+      @apply bg-white hover:bg-gray-100 text-gray-800 py-1 px-2 border border-gray-400 rounded whitespace-nowrap
+    }
+  </style>
+  <style>
+    @-webkit-keyframes shakeY {
+
+      0%,
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      10%,
+      30%,
+      50%,
+      70%,
+      90% {
+        -webkit-transform: translate3d(0, -2px, 0);
+        transform: translate3d(0, -2px, 0)
+      }
+
+      20%,
+      40%,
+      60%,
+      80% {
+        -webkit-transform: translate3d(0, 2px, 0);
+        transform: translate3d(0, 2px, 0)
+      }
+    }
+
+    @keyframes shakeY {
+
+      0%,
+      to {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0)
+      }
+
+      10%,
+      30%,
+      50%,
+      70%,
+      90% {
+        -webkit-transform: translate3d(0, -2px, 0);
+        transform: translate3d(0, -2px, 0)
+      }
+
+      20%,
+      40%,
+      60%,
+      80% {
+        -webkit-transform: translate3d(0, 2px, 0);
+        transform: translate3d(0, 2px, 0)
+      }
     }
   </style>
 </head>
 
 <body class="bg-slate-200">
+
+  <!-- ------------------------------------------------------------------- -->
+  <!-- Btns -->
+  <!-- ------------------------------------------------------------------- -->
+  <div class="flex px-8 py-4">
+    <button class="btn mr-1" data-prefix="'" data-suffix="'">シングルクォート (カンマなし)</button>
+    <button class="btn mr-1" data-prefix="'" data-suffix="',">シングルクォート (カンマあり)</button>
+    <button class="btn mr-1" data-prefix='"' data-suffix='"'>ダブルクォート (カンマなし)</button>
+    <button class="btn mr-1" data-prefix='"' data-suffix='",'>ダブルクォート (カンマあり)</button>
+    <button class="btn mr-1" data-prefix="&lt;th&gt;" data-suffix="&lt;/th&gt;">&lt;th&gt;</button>
+    <button class="btn mr-1" data-prefix="&lt;td&gt;" data-suffix="&lt;/td&gt;">&lt;td&gt;</button>
+    <button class="btn mr-1" data-prefix='sql.append("' data-suffix='");'>sql.append("{Content}");</button>
+  </div>
 
   <!-- ------------------------------------------------------------------- -->
   <!-- Prefix, Content, Suffix Form -->
@@ -62,6 +134,22 @@ ORDER BY
     (() => {
       'use strict';
 
+      const setPrefixAndSuffix = (event) => {
+        Prefix.value = event.target.dataset.prefix;
+        Suffix.value = event.target.dataset.suffix;
+
+        const animateCssClassList = ['animate__animated', 'animate__shakeY'];
+        Prefix.classList.remove(...animateCssClassList);
+        Output.classList.remove(...animateCssClassList);
+        Suffix.classList.remove(...animateCssClassList);
+        setTimeout(() => {
+          Prefix.classList.add(...animateCssClassList);
+          Output.classList.add(...animateCssClassList);
+          Suffix.classList.add(...animateCssClassList);
+        }, 10);
+        sandwich();
+      };
+
       const sandwich = () => {
         const outputValue = Content.value.split(/\r?\n/g).map(row => Prefix.value + row + Suffix.value).join('\n');
         Output.value = outputValue;
@@ -75,6 +163,11 @@ ORDER BY
       Prefix.addEventListener('input', sandwich);
       Content.addEventListener('input', sandwich);
       Suffix.addEventListener('input', sandwich);
+
+      const setPrefixAndSuffixBtnList = document.querySelectorAll('[data-prefix]');
+      setPrefixAndSuffixBtnList.forEach(btn => {
+        btn.addEventListener('click', setPrefixAndSuffix);
+      });
     })();
   </script>
 </body>
