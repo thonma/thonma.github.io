@@ -12,6 +12,7 @@
   <style>
     * {
       font-family: inherit;
+      font-size: inherit;
     }
 
     body {
@@ -23,7 +24,7 @@
 
     .option-form {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-evenly;
     }
 
     .task-form {
@@ -33,7 +34,11 @@
       flex-direction: column;
       flex-wrap: wrap;
       /* 4列になる高さに設定 */
-      height: 680px;
+      height: 720px;
+    }
+
+    .align-center {
+      text-align: center;
     }
   </style>
 </head>
@@ -46,11 +51,17 @@
         <label for="">背景色</label>
         <input type="color" id="graphBgColor" name="_" list="bgColorList" value="#ffffff" onchange="initClock();">
       </div>
+      <div>
+        <label for="">文字色</label>
+        <input type="color" id="graphTextColor" name="_" list="textColorList" value="#000000" onchange="initClock();">
+      </div>
     </form>
   </div>
   <hr>
 
   <div>
+    <div class="align-center">※15分のタスクが連続するときは1つにまとめて入力してください。</div>
+    <hr>
     <form id="scheduleForm" action="." class="task-form" onsubmit="this.preventDefault();"></form>
   </div>
   <hr>
@@ -60,6 +71,13 @@
   </div>
 
   <datalist id="bgColorList">
+    <option value="#ffffff"></option>
+    <option value="#9E9E9E"></option>
+    <option value="#607D8B"></option>
+    <option value="#000000"></option>
+  </datalist>
+
+  <datalist id="textColorList">
     <option value="#ffffff"></option>
     <option value="#9E9E9E"></option>
     <option value="#607D8B"></option>
@@ -100,16 +118,15 @@
       // ==========================================================
       // アイデア
       // ==========================================================
+      // ・全体の開始時刻を変更できるようにする (23時スタートなど)
       // ・タスクにメモを付けられるようにする
       // ・タスク名の右に所用時間を表示する
       //       例:「就寝 (7時間)」、「朝会 (15分)」、「通勤 (1時間30分)」
-      // ・全体の開始時刻を変更できるようにする (23時スタートなど)
       // ・タスクごとに表示する/しないを設定できるようにする
-      // ・15分のタスクを連続で入力するとタスク名が被ってしまう問題に対処する
-      //       ムズそうなので「細かいタスクはまとめて入力してください」という文言表示でも可
       // ・「タスク名を円グラフの外に表示(現行仕様)」と「タスク名を円グラフの中に表示」を変更できるようにする
       //       外と中のどちらに表示するかを自動判定するのはムズそう
       //       「扇形の中心角を2分割する半径の中心を通る水平線」と「扇形の交点(2つ)」を結ぶ線分の長さを求める必要がありそう
+      // ・背景色を変えたとき、円グラフの背景も合わせて変わるようにする
 
       /**
        * ==========================================================
@@ -275,6 +292,9 @@
               // 公式通り算出したところ微妙にズレたので半径などを微調整している
               // ===========================
               for (let h = 0; h <= 23; h++) {
+                // 時刻の色を設定
+                ctx.fillStyle = '#000000';
+
                 // 円グラフの端の座標を算出
                 const deg = h * 15;
                 const rad = (deg - 90) * (Math.PI / 180);
@@ -293,6 +313,9 @@
               const allDataSum = allData.reduce((p, c) => p + c, 0);
 
               for (let i = 0; i < allData.length; i++) {
+                // タスク名の色を設定
+                ctx.fillStyle = graphTextColor.value;
+
                 // 対象データの1つ前までの合計を算出
                 const beforeTargetData = allData.slice(0, i);
                 const beforeTargetDataSum = beforeTargetData.reduce((p, c) => p + c, 0);
