@@ -277,8 +277,13 @@
               // console.log('args: ', args);
               // console.log('options: ', options);
               const { ctx } = chart;
+
+              // ===========================
+              // 罫線や文字のスタイル設定
+              // ===========================
               ctx.lineWidth = 2;
               ctx.font = '12px "Noto Sans JP", sans-serif';
+              ctx.fillStyle = graphTextColor.value;
 
               // ===========================
               // 円グラフの中心座標と半径を算出
@@ -292,9 +297,6 @@
               // 公式通り算出したところ微妙にズレたので半径などを微調整している
               // ===========================
               for (let h = 0; h <= 23; h++) {
-                // 時刻の色を設定
-                ctx.fillStyle = '#000000';
-
                 // 円グラフの端の座標を算出
                 const deg = h * 15;
                 const rad = (deg - 90) * (Math.PI / 180);
