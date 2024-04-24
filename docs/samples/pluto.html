@@ -21,16 +21,19 @@
 
 <body class="py-12 px-16 bg-slate-100">
 
-  <h1 id="Pluto1HeadText" class="jsPlutoHeadText text-lg font-bold text-center">80px</h1>
+  <h1 class="text-lg font-bold text-center mb-2">80px</h1>
   <table id="Pluto1Table" class="mx-auto mb-12"></table>
 
-  <h1 id="Pluto2HeadText" class="jsPlutoHeadText text-lg font-bold text-center">120px</h1>
+  <h1 class="text-lg font-bold text-center mb-2">120px</h1>
   <table id="Pluto2Table" class="mx-auto mb-12"></table>
 
-  <h1 id="Pluto3HeadText" class="jsPlutoHeadText text-lg font-bold text-center">240px</h1>
+  <h1 class="text-lg font-bold text-center mb-2">240px</h1>
   <table id="Pluto3Table" class="mx-auto mb-12"></table>
 
-  <h1 id="Pluto4HeadText" class="jsPlutoHeadText text-lg font-bold text-center">960px</h1>
+  <h1 class="text-lg font-bold text-center mb-2">
+    <input id="CustomSize" type="number" name="CustomSize" value="960" min="20" max="9999" step="10"
+      class="px-2 py-1 text-right">&nbsp;px
+  </h1>
   <table id="Pluto4Table" class="mx-auto mb-12"></table>
 
   <script>
@@ -110,15 +113,15 @@
     (() => {
       `use strict`;
 
-      document
-        .querySelectorAll(`.jsPlutoHeadText`)
-        .forEach(headElement => {
-          const n = headElement.id.replace(/[^0-9]/g, ``);
-          const sizePx = headElement.textContent.replace(`px`, ``);
-          const tableElement = document.querySelector(`#Pluto${n}Table`);
-          Pluto.paint(tableElement, sizePx);
-        });
+      Pluto.paint(Pluto1Table, 80);
+      Pluto.paint(Pluto2Table, 120);
+      Pluto.paint(Pluto3Table, 240);
 
+      Pluto.paint(Pluto4Table, 960);
+      CustomSize.addEventListener(`change`, () => {
+        const size = CustomSize.value;
+        Pluto.paint(Pluto4Table, size);
+      });
     })();
   </script>
 
