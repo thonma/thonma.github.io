@@ -31,7 +31,7 @@
     }
 
     .btn {
-      @apply bg-white hover:bg-gray-100 text-gray-800 py-1 px-2 border border-gray-400 rounded whitespace-nowrap
+      @apply bg-white hover:bg-gray-100 text-gray-800 py-1 px-2 border border-gray-400 rounded whitespace-nowrap text-sm
     }
 
     @-webkit-keyframes shakeY {
@@ -94,17 +94,37 @@
   <!-- よく使うやつ -->
   <!-- ------------------------------------------------------------------- -->
   <div class="px-8 py-4">
-    <label class="block">よく使うやつ</label>
-    <button class="btn mr-1" data-prefix="'" data-suffix="',">シングルクォート</button>
-    <button class="btn mr-1" data-prefix='"' data-suffix='",'>ダブルクォート</button>
-    <button class="btn mr-1" data-prefix="&lt;th&gt;" data-suffix="&lt;/th&gt;">&lt;th&gt;...&lt;/th&gt;</button>
-    <button class="btn mr-1" data-prefix="&lt;td&gt;" data-suffix="&lt;/td&gt;">&lt;td&gt;...&lt;/td&gt;</button>
-    <button class="btn mr-1" data-prefix="str += '" data-suffix="';">str += '...';</button>
-    <button class="btn mr-1" data-prefix='str += "' data-suffix='";'>str += "...";</button>
-    <button class="btn mr-1" data-prefix='sql.append("' data-suffix='");'>sql.append("...");</button>
-    <button class="btn mr-1" data-prefix='Response.Write "' data-suffix='"'>Response.Write "..."</button>
-    <button class="btn mr-1" data-prefix="・" data-suffix="">・</button>
-    <button class="btn mr-1" data-prefix="■" data-suffix="">■</button>
+    <label class="block text-sm">よく使うやつ</label>
+
+    <!-- 配列など -->
+    <button class="btn mr-0.5" data-prefix="'" data-suffix="',">シングルクォート</button>
+    <button class="btn mr-0.5" data-prefix='"' data-suffix='",'>ダブルクォート</button>
+    <span class="d-inline-block mr-8"></span>
+
+    <!-- HTML -->
+    <button class="btn mr-0.5" data-prefix="&lt;th&gt;" data-suffix="&lt;/th&gt;">&lt;th&gt;...&lt;/th&gt;</button>
+    <button class="btn mr-0.5" data-prefix="&lt;td&gt;" data-suffix="&lt;/td&gt;">&lt;td&gt;...&lt;/td&gt;</button>
+    <span class="d-inline-block mr-8"></span>
+
+    <!-- Java, C#, JavaScript など -->
+    <button class="btn mr-0.5" data-prefix="str += '" data-suffix="';">str += '...';</button>
+    <button class="btn mr-0.5" data-prefix='str += "' data-suffix='";'>str += "...";</button>
+    <button class="btn mr-0.5" data-prefix='sql.append("' data-suffix='");'>sql.append("...");</button>
+    <span class="d-inline-block mr-8"></span>
+
+    <!-- PHP -->
+    <button class="btn mr-0.5" data-prefix="$str .= '" data-suffix="';">$str .= '...';</button>
+    <button class="btn mr-0.5" data-prefix='$str .= "' data-suffix='";'>$str .= "...";</button>
+    <span class="d-inline-block mr-8"></span>
+
+    <!-- VBS -->
+    <button class="btn mr-0.5" data-prefix='Response.Write "' data-suffix='"'>Response.Write "..."</button>
+    <span class="d-inline-block mr-8"></span>
+
+    <!-- 日本語 -->
+    <button class="btn mr-0.5" data-prefix="・" data-suffix="">・</button>
+    <button class="btn mr-0.5" data-prefix="■" data-suffix="">■</button>
+    <span class="d-inline-block mr-8"></span>
   </div>
 
   <!-- ------------------------------------------------------------------- -->
@@ -112,11 +132,11 @@
   <!-- ------------------------------------------------------------------- -->
   <div class="flex px-8 py-4">
     <div class="w-1/4 pr-2">
-      <label for="Prefix">行頭テキスト</label>
+      <label for="Prefix" class="text-sm">行頭テキスト</label>
       <input type="text" id="Prefix" name="prefix" value='sql.append("' placeholder="Prefix" class="input-field">
     </div>
     <div class="w-2/4 grow">
-      <label for="Content">対象テキスト</label>
+      <label for="Content" class="text-sm">対象テキスト</label>
       <textarea id="Content" name="content" class="input-field">SELECT
   *
 FROM
@@ -128,7 +148,7 @@ ORDER BY
   foo DESC</textarea>
     </div>
     <div class="w-1/4 pl-2">
-      <label for="Suffix">行末テキスト</label>
+      <label for="Suffix" class="text-sm">行末テキスト</label>
       <input type="text" id="Suffix" name="suffix" value='");' placeholder="Suffix" class="input-field">
     </div>
   </div>
@@ -138,7 +158,7 @@ ORDER BY
   <!-- ------------------------------------------------------------------- -->
   <div class="flex px-8 py-4">
     <div class="w-full grow">
-      <label for="Output">結果</label>
+      <label for="Output" class="text-sm">結果</label>
       <textarea id="Output" name="output" class="input-field" readonly></textarea>
     </div>
   </div>
