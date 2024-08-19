@@ -1,411 +1,491 @@
 <!DOCTYPE html>
 <html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>時計型タイムテーブルジェネレーター</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet" />
+    <style>
+      * {
+        font-family: inherit;
+        font-size: inherit;
+        box-sizing: border-box;
+      }
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>時計型タイムテーブルジェネレーター</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
-  <style>
-    * {
-      font-family: inherit;
-      font-size: inherit;
-    }
+      small {
+        font-size: 0.8rem;
+      }
 
-    body {
-      font-family: "Noto Sans JP", sans-serif;
-      background-color: #f0f0f0;
-      margin: 1rem 0 6rem 0;
-      overflow-y: scroll;
-    }
+      body {
+        font-family: "Noto Sans JP", sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+      }
 
-    .option-form {
-      display: flex;
-      justify-content: space-evenly;
-    }
+      .grid-container {
+        display: grid;
+        grid-template-columns: 400px 800px;
 
-    .task-form {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      flex-direction: column;
-      flex-wrap: wrap;
-      /* 4列になる高さに設定 */
-      height: 720px;
-    }
+        & .left-side {
+          position: relative;
+          height: 100vh;
+          padding: 8px 12px 32px;
+          overflow: hidden;
+          background-color: #333;
+          color: #fff;
 
-    .align-center {
-      text-align: center;
-    }
-  </style>
-</head>
+          & .ps__rail-y {
+            background-color: transparent;
+            position: absolute;
+            right: 0;
+            width: 8px;
 
-<body>
+            & .ps__thumb-y {
+              background-color: rgba(255, 255, 255, 0.6);
+              position: absolute;
+              right: 0;
+              width: 8px;
+              border-radius: 0.375rem;
+            }
+          }
+        }
 
-  <div>
-    <form action="." class="option-form" onsubmit="this.preventDefault();">
-      <div>
-        <label for="">背景色</label>
-        <input type="color" id="graphBgColor" name="_" list="bgColorList" value="#ffffff" onchange="initClock();">
+        & .right-side {
+          padding: 16px;
+        }
+      }
+
+      .align-center {
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <div class="left-side">
+        <form action="." class="option-form" onsubmit="this.preventDefault();">
+          <div>
+            <label for="graphBgColor">背景色</label>
+            <input type="color" id="graphBgColor" name="_" list="bgColorList" value="#ffffff" onchange="initClock();" />
+          </div>
+        </form>
+        <hr />
+        <div class="align-center">
+          <small>※15分のタスクが連続するときは<br />1つにまとめて入力してください。</small>
+        </div>
+        <hr />
+        <form id="scheduleForm" action="." class="task-form" onsubmit="this.preventDefault();"></form>
       </div>
-      <div>
-        <label for="">文字色</label>
-        <input type="color" id="graphTextColor" name="_" list="textColorList" value="#000000" onchange="initClock();">
+
+      <div class="right-side">
+        <canvas id="ClockSchedule" style="width: 100%; margin: 0 auto; padding: 8px"></canvas>
       </div>
-    </form>
-  </div>
-  <hr>
+    </div>
 
-  <div>
-    <div class="align-center">※15分のタスクが連続するときは1つにまとめて入力してください。</div>
-    <hr>
-    <form id="scheduleForm" action="." class="task-form" onsubmit="this.preventDefault();"></form>
-  </div>
-  <hr>
+    <datalist id="bgColorList">
+      <option value="#ffffff"></option>
+      <option value="#9E9E9E"></option>
+      <option value="#607D8B"></option>
+      <option value="#333333"></option>
+    </datalist>
 
-  <div style="height: 800px;">
-    <canvas id="ClockSchedule" style="background-color: #fff; width: 100%; margin: 0 auto; padding: 8px;"></canvas>
-  </div>
+    <!-- SEE: https://materialui.co/colors/ の 500 -->
+    <datalist id="taskColorList">
+      <option value="#F44336"></option>
+      <option value="#E91E63"></option>
+      <option value="#9C27B0"></option>
+      <option value="#673AB7"></option>
+      <option value="#3F51B5"></option>
+      <option value="#2196F3"></option>
+      <option value="#03A9F4"></option>
+      <option value="#00BCD4"></option>
+      <option value="#009688"></option>
+      <option value="#4CAF50"></option>
+      <option value="#8BC34A"></option>
+      <option value="#CDDC39"></option>
+      <option value="#FFEB3B"></option>
+      <option value="#FFC107"></option>
+      <option value="#FF5722"></option>
+      <option value="#795548"></option>
+      <option value="#9E9E9E"></option>
+      <option value="#607D8B"></option>
+      <option value="#ffffff"></option>
+      <option value="#000000"></option>
+    </datalist>
 
-  <datalist id="bgColorList">
-    <option value="#ffffff"></option>
-    <option value="#9E9E9E"></option>
-    <option value="#607D8B"></option>
-    <option value="#000000"></option>
-  </datalist>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/perfect-scrollbar/1.5.1/perfect-scrollbar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/locale/ja.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-umd-min.js"></script>
+    <script>
+      ((global) => {
+        `use strict`;
 
-  <datalist id="textColorList">
-    <option value="#ffffff"></option>
-    <option value="#9E9E9E"></option>
-    <option value="#607D8B"></option>
-    <option value="#000000"></option>
-  </datalist>
+        const WHITE = [255, 255, 255];
+        const BLACK = [0, 0, 0];
 
-  <!-- SEE: https://materialui.co/colors/ の 500 -->
-  <datalist id="taskColorList">
-    <option value="#F44336"></option>
-    <option value="#E91E63"></option>
-    <option value="#9C27B0"></option>
-    <option value="#673AB7"></option>
-    <option value="#3F51B5"></option>
-    <option value="#2196F3"></option>
-    <option value="#03A9F4"></option>
-    <option value="#00BCD4"></option>
-    <option value="#009688"></option>
-    <option value="#4CAF50"></option>
-    <option value="#8BC34A"></option>
-    <option value="#CDDC39"></option>
-    <option value="#FFEB3B"></option>
-    <option value="#FFC107"></option>
-    <option value="#FF5722"></option>
-    <option value="#795548"></option>
-    <option value="#9E9E9E"></option>
-    <option value="#607D8B"></option>
-    <option value="#ffffff"></option>
-    <option value="#000000"></option>
-  </datalist>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/locale/ja.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-umd-min.js"></script>
-  <script>
-    ((global) => {
-      'use strict';
-      // ==========================================================
-      // アイデア
-      // ==========================================================
-      // ・全体の開始時刻を変更できるようにする (23時スタートなど)
-      // ・タスクにメモを付けられるようにする
-      // ・タスク名の右に所用時間を表示する
-      //       例:「就寝 (7時間)」、「朝会 (15分)」、「通勤 (1時間30分)」
-      // ・タスクごとに表示する/しないを設定できるようにする
-      // ・「タスク名を円グラフの外に表示(現行仕様)」と「タスク名を円グラフの中に表示」を変更できるようにする
-      //       外と中のどちらに表示するかを自動判定するのはムズそう
-      //       「扇形の中心角を2分割する半径の中心を通る水平線」と「扇形の交点(2つ)」を結ぶ線分の長さを求める必要がありそう
-      // ・背景色を変えたとき、円グラフの背景も合わせて変わるようにする
-
-      /**
-       * ==========================================================
-       * 共通設定
-       * ==========================================================
-       */
-      const appOptions = {
-        form: {
-          // 何分刻みでスケジュールを入力できるようにするか (15分以外未検証)
-          step: 15,
-        },
-        graph: {
-          // 斜線の長さ
-          diagonalLineLength: 20,
-        },
-      };
-      const defaultValues = {
-        '00:00': ['就寝', '#9E9E9E'],
-        '07:00': ['起床・準備', '#9E9E9E'],
-        '07:30': ['通勤', '#9E9E9E'],
-        '09:15': ['出社・メール確認など', '#FB8C00'],
-        '09:45': ['朝会', '#FB8C00'],
-        '10:00': ['作業', '#F44336'],
-        '12:00': ['ボドゲ', '#4CAF50'],
-        '13:00': ['作業', '#F44336'],
-        '14:00': ['お客様と打合せ', '#2196F3'],
-        '15:00': ['作業', '#F44336'],
-        '18:00': ['退社', '#9E9E9E'],
-        '19:30': ['家事・趣味など', '#4CAF50'],
-      };
-
-      // タイムゾーン (時刻しか扱わないのであんまり意味ない)
-      dayjs.locale('ja');
-
-      /**
-       * ==========================================================
-       * 状態変数 ※変更すると災いが訪れる
-       * ==========================================================
-       */
-      let chart = null;
-
-      /**
-       * ==========================================================
-       * 入力フォームの生成&描画
-       * ==========================================================
-       */
-      const showScheduleFormElement = (startTimeHour, startTimeMin) => {
-        const scheduleForm = document.querySelector('#scheduleForm');
-        const originalStartTime = dayjs(`2000-01-01 ${startTimeHour}:${startTimeMin}:00.000`);
-        let startTime = originalStartTime.clone();
-        let index = 0;
-
-        while (startTime.diff(originalStartTime, 'day') < 1) {
-          const formattedStartTime = startTime.format('HH:mm');
-          const defaultName = defaultValues[formattedStartTime] ? defaultValues[formattedStartTime][0] : '';
-          const defaultColor = defaultValues[formattedStartTime] ? defaultValues[formattedStartTime][1] : '#9E9E9E';
-
-          let htmlStr = ``;
-          htmlStr += `<div>`;
-          htmlStr += `  ${formattedStartTime}`;
-          htmlStr += `  <input type="hidden" name="startTime" value="${formattedStartTime}">`; // new FormData() で入力値を一括取得したいので type="hidden" を描画する
-          htmlStr += `  <input type="text" name="name" value="${defaultName}" onchange="initClock();" placeholder="↓">`;
-          htmlStr += `  <input type="color" name="color" list="taskColorList" value="${defaultColor}" onchange="initClock();">`;
-          htmlStr += `</div>`;
-
-          scheduleForm.insertAdjacentHTML('beforeend', htmlStr);
-
-          index++;
-          startTime = startTime.add(appOptions.form.step, 'minute');
-        }
-      };
-
-      /**
-       * ==========================================================
-       * 入力値の取得と整形
-       * ==========================================================
-       */
-      const getScheduleFormValues = () => {
-        const fd = new FormData(document.querySelector('#scheduleForm'));
-        const inputFieldLengthByRow = 3; // 1行あたりの入力欄の数
-        const result = _.chunk([...fd], inputFieldLengthByRow).map(row => Object.fromEntries(row));
-        return result;
-      };
-
-      /**
-       * ==========================================================
-       * 入力値を円グラフ用に変換
-       * ==========================================================
-       */
-      const convertScheduleFormValues = (vals) => {
-        const scheduleEventsLength = vals.length;
-        const _vals = vals.filter(v => _.isEmpty(v.name) === false);
-        const pieLabels = _vals.map(v => v.name);
-        const pieBgColors = _vals.map(v => v.color);
-        const pieData = [];
-        for (let i = 0; i < _vals.length; i++) {
-          const curr = dayjs(`2000-01-01 ${_vals[i].startTime}:00.000`);
-          const next = _vals[i + 1] ? dayjs(`2000-01-01 ${_vals[i + 1].startTime}:00.000`) : dayjs(`2000-01-02 00:00:00.000`);
-          const elapsedTimeMin = next.diff(curr, 'minute');
-          pieData.push(elapsedTimeMin);
-        }
-        return {
-          bgColors: pieBgColors,
-          labels: pieLabels,
-          data: pieData,
+        // 人間の視覚特性にあった輝度に変換する
+        const getRGBForCalculateLuminance = (_color) => {
+          const color = _color / 255;
+          if (color <= 0.03928) {
+            return color / 12.92;
+          } else {
+            return Math.pow((color + 0.055) / 1.055, 2.4);
+          }
         };
-      };
 
-      /**
-       * ==========================================================
-       * 時計型スケジュール(円グラフ)を表示
-       * ==========================================================
-       */
-      const showClockSchedule = (labels, data, bgColors) => {
-        const canvas = document.querySelector('#ClockSchedule');
-        canvas.style.backgroundColor = graphBgColor.value;
-        const chartConfig = {
-          type: 'pie',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: '',
-              data: data,
-              backgroundColor: bgColors,
-              hoverOffset: 4,
-            }],
-          },
-          options: {
-            animation: false,
-            layout: {
-              padding: {
-                top: 80,
-                right: 80,
-                bottom: 80,
-                left: 80,
-              }
-            },
-            plugins: {
-              legend: { display: false, },
-            },
-            events: [],
-          },
-          plugins: [{
-            id: 'afterRender',
-            afterRender(chart, args, options) {
-              console.log('------------------------------------');
-              console.log('chart: ', chart);
-              // console.log('args: ', args);
-              // console.log('options: ', options);
-              const { ctx } = chart;
-
-              // ===========================
-              // 罫線や文字のスタイル設定
-              // ===========================
-              ctx.lineWidth = 2;
-              ctx.font = '12px "Noto Sans JP", sans-serif';
-              ctx.fillStyle = graphTextColor.value;
-
-              // ===========================
-              // 円グラフの中心座標と半径を算出
-              // ===========================
-              const centerX = chart.width / 2;
-              const centerY = chart.height / 2;
-              const r = (chart.chartArea.height / 2);
-
-              // ===========================
-              // 「0,1,2 ... 23」を表示
-              // 公式通り算出したところ微妙にズレたので半径などを微調整している
-              // ===========================
-              for (let h = 0; h <= 23; h++) {
-                // 円グラフの端の座標を算出
-                const deg = h * 15;
-                const rad = (deg - 90) * (Math.PI / 180);
-                const x = centerX + ((r + 8) * Math.cos(rad));
-                const y = centerY + ((r + 8) * Math.sin(rad));
-
-                // テキストの大きさを算出
-                const textSize = ctx.measureText(h);
-
-                // 〇時を表示
-                ctx.fillText(h, x - (textSize.width / 2), (y + 4));
-              }
-
-              // すべてのデータの合計を算出
-              const allData = chart.data.datasets[0].data;
-              const allDataSum = allData.reduce((p, c) => p + c, 0);
-
-              for (let i = 0; i < allData.length; i++) {
-                // タスク名の色を設定
-                ctx.fillStyle = graphTextColor.value;
-
-                // 対象データの1つ前までの合計を算出
-                const beforeTargetData = allData.slice(0, i);
-                const beforeTargetDataSum = beforeTargetData.reduce((p, c) => p + c, 0);
-
-                // 対象データの半分を算出
-                const targetDataHalf = allData[i] / 2;
-
-                // 角度を算出 (最初に度数を算出して、それをラジアンに変換する)
-                const deg = ((beforeTargetDataSum + targetDataHalf) / allDataSum) * 360;
-                const rad = (deg - 90) * (Math.PI / 180);
-
-                // 線の始点を算出
-                const x = centerX + (r * Math.cos(rad));
-                const y = centerY + (r * Math.sin(rad));
-
-                // 線の描画を開始する
-                ctx.strokeStyle = chart.data.datasets[0].backgroundColor[i];
-                ctx.beginPath();
-                ctx.moveTo(x, y);
-
-                // タスク名の大きさを算出
-                const text = chart.data.labels[i];
-                const textSize = ctx.measureText(text);
-                const textHeightHalf = textSize.actualBoundingBoxAscent / 2;
-
-                if (deg <= 90) {
-                  // 右上→右端に線を描画
-                  ctx.lineTo(x + appOptions.graph.diagonalLineLength, y - appOptions.graph.diagonalLineLength);
-                  ctx.lineTo(chart.width, y - appOptions.graph.diagonalLineLength);
-                  ctx.stroke();
-                  // タスク名を描画
-                  ctx.fillText(text, chart.width - textSize.width, y - appOptions.graph.diagonalLineLength - textHeightHalf);
-                } else if (deg <= 180) {
-                  // 右下→右端に線を描画
-                  ctx.lineTo(x + appOptions.graph.diagonalLineLength, y + appOptions.graph.diagonalLineLength);
-                  ctx.lineTo(chart.width, y + appOptions.graph.diagonalLineLength);
-                  ctx.stroke();
-                  // タスク名を描画
-                  ctx.fillText(text, chart.width - textSize.width, y + appOptions.graph.diagonalLineLength - textHeightHalf);
-                } else if (deg <= 270) {
-                  // 左下→左端に線を描画
-                  ctx.lineTo(x - appOptions.graph.diagonalLineLength, y + appOptions.graph.diagonalLineLength);
-                  ctx.lineTo(0, y + appOptions.graph.diagonalLineLength);
-                  ctx.stroke();
-                  // タスク名を描画
-                  ctx.fillText(text, 0, y + appOptions.graph.diagonalLineLength - textHeightHalf);
-                } else {
-                  // 左上→左端に線を描画
-                  ctx.lineTo(x - appOptions.graph.diagonalLineLength, y - appOptions.graph.diagonalLineLength);
-                  ctx.lineTo(0, y - appOptions.graph.diagonalLineLength);
-                  ctx.stroke();
-                  // タスク名を描画
-                  ctx.fillText(text, 0, y - appOptions.graph.diagonalLineLength - textHeightHalf);
-                }
-              }
-            },
-          }]
+        // 相対輝度に変換する
+        const getRelativeLuminance = (rgb) => {
+          const [red, green, blue] = rgb;
+          const R = getRGBForCalculateLuminance(red);
+          const G = getRGBForCalculateLuminance(green);
+          const B = getRGBForCalculateLuminance(blue);
+          return 0.2126 * R + 0.7152 * G + 0.0722 * B;
         };
-        if (chart !== null) {
-          chart.destroy();
-        }
-        chart = new Chart(canvas, chartConfig);
-      };
 
-      /**
-       * ==========================================================
-       * 入力値を取得&整形して時計型スケジュールを初期化
-       * ==========================================================
-       */
-      const initClock = () => {
-        const scheduleFormVals = getScheduleFormValues();
-        const schedulePie = convertScheduleFormValues(scheduleFormVals);
-        showClockSchedule(schedulePie.labels, schedulePie.data, schedulePie.bgColors);
-      };
-      global.initClock = initClock; // 入力フォームの onchange で呼ぶのでグローバルスコープにする
+        // コントラスト比を計算する
+        const getContrastRatio = (color1, color2) => {
+          const luminance1 = getRelativeLuminance(color1);
+          const luminance2 = getRelativeLuminance(color2);
+          const bright = Math.max(luminance1, luminance2);
+          const dark = Math.min(luminance1, luminance2);
+          return (bright + 0.05) / (dark + 0.05);
+        };
 
-      /**
-       * ==========================================================
-       * エントリーポイント
-       * ==========================================================
-       */
-      const main = (() => {
-        showScheduleFormElement(0, 0);
-        initClock();
-      })();
+        // 色コードをRGB配列に変換する
+        const getRgb = (colorCode) => {
+          let _colorCode = colorCode.substring(1);
+          if (_colorCode.length === 3) {
+            return _colorCode
+              .split(``)
+              .map((c) => c + c)
+              .map((c) => parseInt(c, 16));
+          }
+          return _colorCode.match(/.{2}/g).map((c) => parseInt(c, 16));
+        };
 
-    })(window);
-  </script>
-</body>
+        // RGB配列を色コードに変換する
+        const getCode = (rgb) => {
+          return `#` + rgb.map((c) => c.toString(16)).join(``);
+        };
 
+        // 背景色から文字色(白or黒)を取得する
+        global.getFontColor = (bgColorCode) => {
+          const rgb = getRgb(bgColorCode);
+          const lightRatio = getContrastRatio(rgb, WHITE);
+          const darkRatio = getContrastRatio(rgb, BLACK);
+          return lightRatio < darkRatio ? getCode(BLACK) : getCode(WHITE);
+        };
+      })(window);
+    </script>
+    <script>
+      ((global) => {
+        "use strict";
+        // ==========================================================
+        // アイデア
+        // ==========================================================
+        // ・全体の開始時刻を変更できるようにする (23時スタートなど)
+        // ・タスクにメモを付けられるようにする
+        // ・タスク名の右に所用時間を表示する
+        //       例:「就寝 (7時間)」、「朝会 (15分)」、「通勤 (1時間30分)」
+        // ・タスクごとに表示する/しないを設定できるようにする
+        // ・「タスク名を円グラフの外に表示(現行仕様)」と「タスク名を円グラフの中に表示」を変更できるようにする
+        //       外と中のどちらに表示するかを自動判定するのはムズそう
+        //       「扇形の中心角を2分割する半径の中心を通る水平線」と「扇形の交点(2つ)」を結ぶ線分の長さを求める必要がありそう
+        // ・背景色を変えたとき、円グラフの背景も合わせて変わるようにする
+
+        /**
+         * ==========================================================
+         * 共通設定
+         * ==========================================================
+         */
+        const appOptions = {
+          form: {
+            // 何分刻みでスケジュールを入力できるようにするか (15分以外未検証)
+            step: 15,
+          },
+          graph: {
+            // 斜線の長さ
+            diagonalLineLength: 20,
+          },
+        };
+        const defaultValues = {
+          "00:00": ["就寝", "#9E9E9E"],
+          "07:00": ["起床・準備", "#9E9E9E"],
+          "07:30": ["通勤", "#9E9E9E"],
+          "09:15": ["出社・朝会・タスク確認など", "#FB8C00"],
+          "10:00": ["作業", "#F44336"],
+          "12:00": ["ボドゲ", "#4CAF50"],
+          "13:00": ["作業", "#F44336"],
+          "14:00": ["お客様と打合せ", "#2196F3"],
+          "15:00": ["作業", "#F44336"],
+          "18:00": ["退社", "#9E9E9E"],
+          "19:30": ["家事・趣味など", "#4CAF50"],
+        };
+
+        // タイムゾーン (時刻しか扱わないのであんまり意味ない)
+        dayjs.locale("ja");
+
+        /**
+         * ==========================================================
+         * 状態変数 ※変更すると災いが訪れる
+         * ==========================================================
+         */
+        let chart = null;
+
+        /**
+         * ==========================================================
+         * 入力フォームの生成&描画
+         * ==========================================================
+         */
+        const showScheduleFormElement = (startTimeHour, startTimeMin) => {
+          const scheduleForm = document.querySelector("#scheduleForm");
+          const originalStartTime = dayjs(`2000-01-01 ${startTimeHour}:${startTimeMin}:00.000`);
+          let startTime = originalStartTime.clone();
+          let index = 0;
+
+          while (startTime.diff(originalStartTime, "day") < 1) {
+            const formattedStartTime = startTime.format("HH:mm");
+            const defaultName = defaultValues[formattedStartTime] ? defaultValues[formattedStartTime][0] : "";
+            const defaultColor = defaultValues[formattedStartTime] ? defaultValues[formattedStartTime][1] : "#9E9E9E";
+
+            let htmlStr = ``;
+            htmlStr += `<div>`;
+            htmlStr += `  ${formattedStartTime}`;
+            htmlStr += `  <input type="hidden" name="startTime" value="${formattedStartTime}">`; // new FormData() で入力値を一括取得したいので type="hidden" を描画する
+            htmlStr += `  <input type="text" name="name" value="${defaultName}" onchange="initClock();" placeholder="↓">`;
+            htmlStr += `  <input type="color" name="color" list="taskColorList" value="${defaultColor}" onchange="initClock();">`;
+            htmlStr += `</div>`;
+
+            scheduleForm.insertAdjacentHTML("beforeend", htmlStr);
+
+            index++;
+            startTime = startTime.add(appOptions.form.step, "minute");
+          }
+
+          new PerfectScrollbar(".left-side", {
+            wheelSpeed: 1,
+            wheelPropagation: true,
+            minScrollbarLength: 20,
+            suppressScrollX: true,
+          });
+        };
+
+        /**
+         * ==========================================================
+         * 入力値の取得と整形
+         * ==========================================================
+         */
+        const getScheduleFormValues = () => {
+          const fd = new FormData(document.querySelector("#scheduleForm"));
+          const inputFieldLengthByRow = 3; // 1行あたりの入力欄の数
+          const result = _.chunk([...fd], inputFieldLengthByRow).map((row) => Object.fromEntries(row));
+          return result;
+        };
+
+        /**
+         * ==========================================================
+         * 入力値を円グラフ用に変換
+         * ==========================================================
+         */
+        const convertScheduleFormValues = (vals) => {
+          const scheduleEventsLength = vals.length;
+          const _vals = vals.filter((v) => _.isEmpty(v.name) === false);
+          const pieLabels = _vals.map((v) => v.name);
+          const pieBgColors = _vals.map((v) => v.color);
+          const pieData = [];
+          for (let i = 0; i < _vals.length; i++) {
+            const curr = dayjs(`2000-01-01 ${_vals[i].startTime}:00.000`);
+            const next = _vals[i + 1] ? dayjs(`2000-01-01 ${_vals[i + 1].startTime}:00.000`) : dayjs(`2000-01-02 00:00:00.000`);
+            const elapsedTimeMin = next.diff(curr, "minute");
+            pieData.push(elapsedTimeMin);
+          }
+          return {
+            bgColors: pieBgColors,
+            labels: pieLabels,
+            data: pieData,
+          };
+        };
+
+        /**
+         * ==========================================================
+         * 時計型スケジュール(円グラフ)を表示
+         * ==========================================================
+         */
+        const showClockSchedule = (labels, data, bgColors) => {
+          const canvas = document.querySelector("#ClockSchedule");
+          canvas.style.backgroundColor = graphBgColor.value;
+          const chartConfig = {
+            type: "pie",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "",
+                  data: data,
+                  backgroundColor: bgColors,
+                  hoverOffset: 4,
+                },
+              ],
+            },
+            options: {
+              borderColor: graphBgColor.value,
+              animation: false,
+              layout: {
+                padding: {
+                  top: 80,
+                  right: 80,
+                  bottom: 80,
+                  left: 80,
+                },
+              },
+              plugins: {
+                legend: { display: false },
+              },
+              events: [],
+            },
+            plugins: [
+              {
+                id: "afterRender",
+                afterRender(chart, args, options) {
+                  console.log("------------------------------------");
+                  console.log("chart: ", chart);
+                  // console.log('args: ', args);
+                  // console.log('options: ', options);
+                  const { ctx } = chart;
+
+                  // ===========================
+                  // 罫線や文字のスタイル設定
+                  // ===========================
+                  ctx.lineWidth = 2;
+                  ctx.font = '12px "Noto Sans JP", sans-serif';
+                  ctx.fillStyle = getFontColor(graphBgColor.value);
+
+                  // ===========================
+                  // 円グラフの中心座標と半径を算出
+                  // ===========================
+                  const centerX = chart.width / 2;
+                  const centerY = chart.height / 2;
+                  const r = chart.chartArea.height / 2;
+
+                  // ===========================
+                  // 「0,1,2 ... 23」を表示
+                  // 公式通り算出したところ微妙にズレたので半径などを微調整している
+                  // ===========================
+                  for (let h = 0; h <= 23; h++) {
+                    // 円グラフの端の座標を算出
+                    const deg = h * 15;
+                    const rad = (deg - 90) * (Math.PI / 180);
+                    const x = centerX + (r + 8) * Math.cos(rad);
+                    const y = centerY + (r + 8) * Math.sin(rad);
+
+                    // テキストの大きさを算出
+                    const textSize = ctx.measureText(h);
+
+                    // 〇時を表示
+                    ctx.fillText(h, x - textSize.width / 2, y + 4);
+                  }
+
+                  // すべてのデータの合計を算出
+                  const allData = chart.data.datasets[0].data;
+                  const allDataSum = allData.reduce((p, c) => p + c, 0);
+
+                  for (let i = 0; i < allData.length; i++) {
+                    // タスク名の色を設定
+                    ctx.fillStyle = ctx.fillStyle;
+
+                    // 対象データの1つ前までの合計を算出
+                    const beforeTargetData = allData.slice(0, i);
+                    const beforeTargetDataSum = beforeTargetData.reduce((p, c) => p + c, 0);
+
+                    // 対象データの半分を算出
+                    const targetDataHalf = allData[i] / 2;
+
+                    // 角度を算出 (最初に度数を算出して、それをラジアンに変換する)
+                    const deg = ((beforeTargetDataSum + targetDataHalf) / allDataSum) * 360;
+                    const rad = (deg - 90) * (Math.PI / 180);
+
+                    // 線の始点を算出
+                    const x = centerX + r * Math.cos(rad);
+                    const y = centerY + r * Math.sin(rad);
+
+                    // 線の描画を開始する
+                    ctx.strokeStyle = chart.data.datasets[0].backgroundColor[i];
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+
+                    // タスク名の大きさを算出
+                    const text = chart.data.labels[i];
+                    const textSize = ctx.measureText(text);
+                    const textHeightHalf = textSize.actualBoundingBoxAscent / 2;
+
+                    if (deg <= 90) {
+                      // 右上→右端に線を描画
+                      ctx.lineTo(x + appOptions.graph.diagonalLineLength, y - appOptions.graph.diagonalLineLength);
+                      ctx.lineTo(chart.width, y - appOptions.graph.diagonalLineLength);
+                      ctx.stroke();
+                      // タスク名を描画
+                      ctx.fillText(text, chart.width - textSize.width, y - appOptions.graph.diagonalLineLength - textHeightHalf);
+                    } else if (deg <= 180) {
+                      // 右下→右端に線を描画
+                      ctx.lineTo(x + appOptions.graph.diagonalLineLength, y + appOptions.graph.diagonalLineLength);
+                      ctx.lineTo(chart.width, y + appOptions.graph.diagonalLineLength);
+                      ctx.stroke();
+                      // タスク名を描画
+                      ctx.fillText(text, chart.width - textSize.width, y + appOptions.graph.diagonalLineLength - textHeightHalf);
+                    } else if (deg <= 270) {
+                      // 左下→左端に線を描画
+                      ctx.lineTo(x - appOptions.graph.diagonalLineLength, y + appOptions.graph.diagonalLineLength);
+                      ctx.lineTo(0, y + appOptions.graph.diagonalLineLength);
+                      ctx.stroke();
+                      // タスク名を描画
+                      ctx.fillText(text, 0, y + appOptions.graph.diagonalLineLength - textHeightHalf);
+                    } else {
+                      // 左上→左端に線を描画
+                      ctx.lineTo(x - appOptions.graph.diagonalLineLength, y - appOptions.graph.diagonalLineLength);
+                      ctx.lineTo(0, y - appOptions.graph.diagonalLineLength);
+                      ctx.stroke();
+                      // タスク名を描画
+                      ctx.fillText(text, 0, y - appOptions.graph.diagonalLineLength - textHeightHalf);
+                    }
+                  }
+                },
+              },
+            ],
+          };
+          if (chart !== null) {
+            chart.destroy();
+          }
+          chart = new Chart(canvas, chartConfig);
+        };
+
+        /**
+         * ==========================================================
+         * 入力値を取得&整形して時計型スケジュールを初期化
+         * ==========================================================
+         */
+        const initClock = () => {
+          const scheduleFormVals = getScheduleFormValues();
+          const schedulePie = convertScheduleFormValues(scheduleFormVals);
+          showClockSchedule(schedulePie.labels, schedulePie.data, schedulePie.bgColors);
+        };
+        global.initClock = initClock; // 入力フォームの onchange で呼ぶのでグローバルスコープにする
+
+        /**
+         * ==========================================================
+         * エントリーポイント
+         * ==========================================================
+         */
+        const main = (() => {
+          showScheduleFormElement(0, 0);
+          initClock();
+        })();
+      })(window);
+    </script>
+  </body>
 </html>
