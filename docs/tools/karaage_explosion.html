@@ -58,6 +58,9 @@
           break;
         }
       }
+      if (percentage === 0) {
+        colorRange = [0, 1];
+      }
       const firstcolor = gradient[colorRange[0]][1];
       const secondcolor = gradient[colorRange[1]][1];
 
