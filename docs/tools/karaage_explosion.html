@@ -36,15 +36,18 @@
   <!-- SEE: https://qiita.com/akebi_mh/items/3377666c26071a4284ee -->
   <script src="color_convert.js"></script>
   <script>
+    /**
+     * 爆発色を取得する
+     */
     function getExplosionRgb(percentage) {
-      // グラデーション設定
+      // グラデーション設定。CSS の linear-gradient() みたいに設定する。
       // gradient[i][0] = 割合
       // gradient[i][1] = 色
       const gradient = [
-        [0, [255, 255, 255]], // White
-        [35, [255, 255, 0]], // Yellow
-        [45, [255, 0, 0]], // Red
-        [100, [0, 0, 0]], // Black
+        [0, [255, 255, 255]], // 0% White
+        [35, [255, 255, 0]], // 35% Yellow
+        [45, [255, 0, 0]], // 45% Red
+        [100, [0, 0, 0]], // 100% Black
       ];
 
       // percentage に最も近い2つの色を取得
@@ -111,7 +114,7 @@
       // --------------------------------------------------
       const ctx = ExplosionImgCanvas.getContext(`2d`, { willReadFrequently: true });
       imgObj.onload = function () {
-        // <canvas> を大きさを画像に合わせる
+        // <canvas> を大きさとぼかしを設定
         ExplosionImgCanvas.width = imgObj.width;
         ExplosionImgCanvas.height = imgObj.height;
         ExplosionImgCanvas.style.filter = `blur(${BlurValue.textContent})`;
