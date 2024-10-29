@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>唐揚げ ⇔ 爆発 コンバータ</title>
+  <style>
+    label {
+      display: block;
+    }
+
+    input[type=range] {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <label for="ImgField">唐揚げ画像</label>
+  <input type="file" accept="image/*" id="ImgField"><br>
+  <br>
+
+  <label for="BlurField">ぼかし <span id="BlurValue">1px</span></label>
+  <input type="range" id="BlurField" min="0" max="10" step="0.1" value="1"><br>
+  <hr>
+
+  オリジナル<br>
+  <img id="OriginalImg" src=""></canvas>
+  <hr>
+
+  爆発<br>
+  <canvas id="ExplosionImgCanvas" height="0"></canvas>
+
+  <!-- SEE: https://qiita.com/akebi_mh/items/3377666c26071a4284ee -->
+  <script src="color_convert.js"></script>
+  <script>
+    function getExplosionRgb(percentage) {
+      // グラデーション設定
+      // gradient[i][0] = 割合
+      // gradient[i][1] = 色
+      const gradient = [
+        [0, [255, 255, 255]], // White
+        [35, [255, 255, 0]], // Yellow
+        [45, [255, 0, 0]], // Red
+        [100, [0, 0, 0]], // Black
+      ];
+
+      // percentage に最も近い2つの色を取得
+      let colorRange = []
+      for (let i = 0; i < gradient.length; i++) {
+        if (percentage <= gradient[i][0]) {
+          colorRange = [i - 1, i];
+          break;
+        }
+      }
+      const firstcolor = gradient[colorRange[0]][1];
+      const secondcolor = gradient[colorRange[1]][1];
+
+      // 最も近い2色の比率を計算する
+      const firstcolor_x = (gradient[colorRange[0]][0] / 100);
+      const secondcolor_x = (gradient[colorRange[1]][0] / 100) - firstcolor_x;
+      const slider_x = (percentage / 100) - firstcolor_x;
+      const ratio = slider_x / secondcolor_x
+
+      // 最も近い2色と比率を使って rgb を取得する
+      const rgb = pickHex(secondcolor, firstcolor, ratio);
+      return {
+        r: rgb[0],
+        g: rgb[1],
+        b: rgb[2],
+      };
+    }
+
+    /**
+     * 最も近い2色と比率を使って rgb を計算する
+     */
+    function pickHex(color1, color2, weight) {
+      const p = weight;
+      const w = p * 2 - 1;
+      const w1 = (w / 1 + 1) / 2;
+      const w2 = 1 - w1;
+      const rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
+      Math.round(color1[1] * w1 + color2[1] * w2),
+      Math.round(color1[2] * w1 + color2[2] * w2)];
+      return rgb;
+    }
+
+    ImgField.addEventListener(`change`, (e) => {
+      if (e?.target?.files?.length === 0) return;
+
+      // --------------------------------------------------
+      // アップロードされた画像のURLを取得
+      // --------------------------------------------------
+      const fileUrl = URL.createObjectURL(e.target.files[0]);
+
+      // --------------------------------------------------
+      // オリジナル画像を描画
+      // --------------------------------------------------
+      OriginalImg.src = fileUrl;
+
+      // --------------------------------------------------
+      // 画像オブジェクトを生成
+      // --------------------------------------------------
+      const imgObj = new Image();
+      imgObj.src = fileUrl;
+
+      // --------------------------------------------------
+      // <canvas> に爆発加工した画像を描画
+      // --------------------------------------------------
+      const ctx = ExplosionImgCanvas.getContext(`2d`, { willReadFrequently: true });
+      imgObj.onload = function () {
+        // <canvas> を大きさを画像に合わせる
+        ExplosionImgCanvas.width = imgObj.width;
+        ExplosionImgCanvas.height = imgObj.height;
+        ExplosionImgCanvas.style.filter = `blur(${BlurValue.textContent})`;
+
+        // 画像の加工
+        ctx.drawImage(imgObj, 0, 0);
+        const src = ctx.getImageData(0, 0, imgObj.width, imgObj.height);
+        const dst = ctx.createImageData(imgObj.width, imgObj.height);
+
+        // 輝度に応じて爆発色に変換して描画
+        for (let i = 0; i < src.data.length; i += 4) {
+          const hsl = rgb2hsl(src.data[i], src.data[i + 1], src.data[i + 2]);
+          const explosionRgb = getExplosionRgb(hsl.l * 100);
+
+          dst.data[i] = explosionRgb.r;
+          dst.data[i + 1] = explosionRgb.g;
+          dst.data[i + 2] = explosionRgb.b;
+          dst.data[i + 3] = src.data[i + 3]; // 不透明度 (Alpha)
+        }
+        ctx.putImageData(dst, 0, 0);
+      };
+    });
+
+    BlurField.addEventListener(`input`, (e) => {
+      BlurValue.textContent = `${e.target.value}px`;
+      ExplosionImgCanvas.style.filter = `blur(${BlurValue.textContent})`;
+    });
+  </script>
+
+</body>
+
+</html>
