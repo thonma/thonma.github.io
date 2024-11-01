@@ -94,38 +94,40 @@
   <!-- よく使うやつ -->
   <!-- ------------------------------------------------------------------- -->
   <div class="px-8 py-4">
-    <label class="block text-sm">よく使うやつ</label>
+    <div class="mb-2">
+      <!-- 配列など -->
+      <button class="btn mr-0.5" data-prefix="'" data-suffix="',">シングルクォート</button>
+      <button class="btn mr-0.5" data-prefix='"' data-suffix='",'>ダブルクォート</button>
+      <button class="btn mr-0.5" data-prefix='`' data-suffix='`,'>バックティック</button>
+      <span class="d-inline-block mr-8"></span>
 
-    <!-- 配列など -->
-    <button class="btn mr-0.5" data-prefix="'" data-suffix="',">シングルクォート</button>
-    <button class="btn mr-0.5" data-prefix='"' data-suffix='",'>ダブルクォート</button>
-    <span class="d-inline-block mr-8"></span>
+      <!-- PHP -->
+      <button class="btn mr-0.5 text-left" data-prefix="$str .= '" data-suffix="';">$str .= '...';</button>
+      <button class="btn mr-0.5" data-prefix='$str .= "' data-suffix='";'>$str .= "...";</button>
+      <button class="btn mr-0.5" data-prefix='var_dump(' data-suffix=');'>var_dump(...);</button>
+      <button class="btn mr-0.5" data-prefix='print_r(' data-suffix=');'>print_r(...);</button>
+      <button class="btn mr-0.5" data-prefix='echo ' data-suffix=';'>echo ...;</button>
+      <span class="d-inline-block mr-8"></span>
 
-    <!-- HTML -->
-    <button class="btn mr-0.5" data-prefix="&lt;th&gt;" data-suffix="&lt;/th&gt;">&lt;th&gt;...&lt;/th&gt;</button>
-    <button class="btn mr-0.5" data-prefix="&lt;td&gt;" data-suffix="&lt;/td&gt;">&lt;td&gt;...&lt;/td&gt;</button>
-    <span class="d-inline-block mr-8"></span>
+      <!-- Java, C#, JavaScript など -->
+      <button class="btn mr-0.5" data-prefix="str += '" data-suffix="';">str += '...';</button>
+      <button class="btn mr-0.5" data-prefix='str += "' data-suffix='";'>str += "...";</button>
+      <button class="btn mr-0.5" data-prefix='str += `' data-suffix='`;'>str += `...`;</button>
+      <button class="btn mr-0.5" data-prefix='str.append("' data-suffix='");'>str.append("...");</button>
+    </div>
 
-    <!-- Java, C#, JavaScript など -->
-    <button class="btn mr-0.5" data-prefix="str += '" data-suffix="';">str += '...';</button>
-    <button class="btn mr-0.5" data-prefix='str += "' data-suffix='";'>str += "...";</button>
-    <button class="btn mr-0.5" data-prefix='sql.append("' data-suffix='");'>sql.append("...");</button>
-    <span class="d-inline-block mr-8"></span>
+    <div>
+      <!-- HTML -->
+      <button class="btn mr-0.5" data-prefix="&lt;th&gt;" data-suffix="&lt;/th&gt;">&lt;th&gt;...&lt;/th&gt;</button>
+      <button class="btn mr-0.5" data-prefix="&lt;td&gt;" data-suffix="&lt;/td&gt;">&lt;td&gt;...&lt;/td&gt;</button>
+      <button class="btn mr-0.5" data-prefix="&lt;li&gt;" data-suffix="&lt;/li&gt;">&lt;li&gt;...&lt;/li&gt;</button>
+      <span class="d-inline-block mr-8"></span>
 
-    <!-- PHP -->
-    <button class="btn mr-0.5" data-prefix="$str .= '" data-suffix="';">$str .= '...';</button>
-    <button class="btn mr-0.5" data-prefix='$str .= "' data-suffix='";'>$str .= "...";</button>
-    <span class="d-inline-block mr-8"></span>
-
-    <!-- VBS -->
-    <button class="btn mr-0.5" data-prefix='sql = sql & "' data-suffix='"'>sql = sql & "..."</button>
-    <button class="btn mr-0.5" data-prefix='Response.Write "' data-suffix='"'>Response.Write "..."</button>
-    <span class="d-inline-block mr-8"></span>
-
-    <!-- 日本語 -->
-    <button class="btn mr-0.5" data-prefix="・" data-suffix="">・</button>
-    <button class="btn mr-0.5" data-prefix="■" data-suffix="">■</button>
-    <span class="d-inline-block mr-8"></span>
+      <!-- 日本語 -->
+      <button class="btn mr-0.5" data-prefix="・" data-suffix="">・</button>
+      <button class="btn mr-0.5" data-prefix="■" data-suffix="">■</button>
+      <span class="d-inline-block mr-8"></span>
+    </div>
   </div>
 
   <!-- ------------------------------------------------------------------- -->
